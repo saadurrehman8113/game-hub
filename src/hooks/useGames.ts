@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { CanceledError } from "axios";
 
 import apiClient from "../services/api-client";
@@ -14,7 +13,7 @@ export interface Game {
   id: number;
   name: string;
   background_image: string;
-  platforms: { platform: Platform }[];
+  parent_platforms: { platform: Platform }[];
 }
 
 interface RawgIoResponse {

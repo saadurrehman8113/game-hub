@@ -11,14 +11,15 @@ import { MdPhoneIphone } from "react-icons/md";
 import { SiNintendo } from "react-icons/si";
 import { BsGlobe } from "react-icons/bs";
 
-import type { Platform } from "../hooks/useGames";
 import type { IconType } from "react-icons";
+
+import type { Platform } from "../hooks/useGames";
 
 interface Props {
   platforms: Platform[];
 }
 
-const PlatformIcons = ({ platforms }: Props) => {
+const PlatformIconList = ({ platforms }: Props) => {
   const iconMap: { [key: string]: IconType } = {
     pc: FaWindows,
     playstation: FaPlaystation,
@@ -34,10 +35,10 @@ const PlatformIcons = ({ platforms }: Props) => {
   return (
     <HStack marginY={1}>
       {platforms.map((platform) => (
-        <Icon as={iconMap[platform.name]} color="grey.500" />
+        <Icon as={iconMap[platform.slug]} color="grey.500" />
       ))}
     </HStack>
   );
 };
 
-export default PlatformIcons;
+export default PlatformIconList;
