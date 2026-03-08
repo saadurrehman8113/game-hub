@@ -1,0 +1,44 @@
+import { useEffect, useState } from "react";
+import { CanceledError } from "axios";
+
+import apiClient from "../services/api-client";
+
+interface Props {
+  endpoint: string;
+}
+
+interface ApiResponse<T> {
+  count: number;
+  results: T[];
+}
+
+const useData = <T>({ endpoint }: Props) => {
+  const [data, setData] = useState<T[]>([]);
+  const [error, setError] = useState("");
+  const [loading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    setIsLoading(true);
+
+    apiClient
+      .get<ApiResponse<T>>(endpoint, { signal: controller.signal })
+      .then((res) => {
+        setData(res.data.results);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        if (err instanceof CanceledError) return;
+
+        setError(err.message);
+        setIsLoading(false);
+      });
+
+    return () => controller.abort();
+  }, []);
+
+  return { data, error, loading };
+};
+
+export default useData;
