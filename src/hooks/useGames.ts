@@ -1,7 +1,4 @@
-import { useEffect, useState } from "react";
-import { CanceledError } from "axios";
-
-import apiClient from "../services/api-client";
+import useData from "./useData";
 
 export interface Platform {
   id: number;
@@ -17,38 +14,6 @@ export interface Game {
   metacritic: number;
 }
 
-interface RawgIoResponse {
-  count: number;
-  results: Game[];
-}
-
-const useGames = () => {
-  const [games, setGames] = useState<Game[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    setIsLoading(true);
-
-    apiClient
-      .get<RawgIoResponse>("/games", { signal: controller.signal })
-      .then((res) => {
-        setGames(res.data.results);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        if (err instanceof CanceledError) return;
-
-        setError(err.message);
-        setIsLoading(false);
-      });
-
-    return () => controller.abort();
-  }, []);
-
-  return { games, error, loading };
-};
+const useGames = () => useData<Game>({ endpoint: "/games" });
 
 export default useGames;
